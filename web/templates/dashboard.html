@@ -1,0 +1,209 @@
+<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <!-- BOOTSTRAP 4-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!--CUSTOM CSS-->
+    <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="templates/css/main.css">
+</head>
+
+
+
+
+
+<body>
+    <div class="d-flex">
+        <div id="sidebar-container" class="bg-primary">
+            <div class="logo">
+                <h4 class="text-light">
+                    <div class="b">Dashboard</div>
+                </h4>
+            </div>
+            <div class="menu">
+                <a href="/usuarios" class="d-block text-light p-3"><i class="icon ion-md-people mr-2 lead"></i> Usuarios</a>
+                <a href="/dashboard" class="d-block text-light p-3"><i class="icon ion-md-stats mr-2 lead"></i> Estadísticas</a>
+                <a href="/live" class="d-block text-light p-3"><i class="icon ion-md-apps mr-2 lead"></i> Live</a>
+                <a href="#" class="d-block text-light p-3"><i class="icon ion-md-person mr-2 lead"></i> Perfil</a>
+            </div>
+        </div>
+        <div class="w-100">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+                <div class="container-fluid">
+                    <a class="navbar-brand " href="/">PYTHON web</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse " id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page" href="/">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/entrada">entrada</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="/dashboard">Dashboard</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="/about">About</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <div id="content">
+                <section class="py-3">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-9"></div>
+                            <h1 class="font-weight-bold mb-0">Bienvenido</h1>
+                            <p class="lead text-muted">Revisa la última información</p>
+                            <div class="col-lg-3 d-flex ms-auto">
+                                <button class="btn btn-primary w-100 align-self-center">Descargar Archivo</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+                <section class="bg-mix">
+                    <div class="container-fluid">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row ">
+                                    <div class="col-lg-4 col-md-6 stat my-3">
+                                        <h6 class="text-muted">Ingresos Mensuales</h6>
+                                        <h3><b id="ing_men">$50.000</b></h3>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 stat my-3">
+                                        <h6 class="text-muted">Usuarios actuales</h6>
+                                        <h3><b id="num_user"></b></h3>
+
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 my-3">
+                                        <h6 class="text-muted">Parqueaderos disponibles</h6>
+                                        <h3><b id="num_park"></b></h3>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="bg-grey">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8 my-3">
+                                <div class="card">
+                                    <div class="card-header bg-light">
+                                        <h6><b> Número de usuarios en el parqueadero</b></h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div>
+                                            <canvas id="myChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 my-3">
+                                <div class="card">
+                                    <div class="car-header bg-light align-self-center mt-2">
+                                        <h6><b> Tipos de usuarios</b></h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-flex border-bottom py-2 mt-2">
+                                            <div class="me-3">
+                                                <h2><i class="icon ion-md-pricetag"></i></h2>
+                                            </div>
+                                            <div>
+                                                <h6 class="d-inline-block">$2000 Hora</h6>
+                                                <span class="badge badge-danger">0% descuento</span>
+                                                <small class="d-block text-muted">Visitantes</small>
+                                            </div>
+
+                                        </div>
+                                        <div class="d-flex border-bottom py-2 mt-2">
+                                            <div class="me-3">
+                                                <h2><i class="icon ion-md-pricetag"></i></h2>
+                                            </div>
+                                            <div>
+                                                <h6 class="d-inline-block">$1200 Hora</h6>
+                                                <span class="badge badge-secondary">40% descuento</span>
+                                                <small class="d-block text-muted">Contratistas</small>
+                                            </div>
+
+                                        </div>
+                                        <div class="d-flex border-bottom py-2 mt-2">
+                                            <div class="me-3">
+                                                <h2><i class="icon ion-md-pricetag"></i></h2>
+                                            </div>
+                                            <div>
+                                                <h6 class="d-inline-block">$600 Hora</h6>
+                                                <span class="badge badge-danger ms-2">70% descuento</span>
+                                                <small class="d-block text-muted">Trabajadores</small>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                </section>
+                <section class="bg-grey">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8 my-3">
+                                <div class="card">
+                                    <div class="card-header bg-light">
+                                        <h6><b> Usuarios</b></h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div style="height: 300px" >
+                                            <canvas id="myChartP" height="10"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.4.1/dist/chart.min.js"
+        integrity="sha256-GMN9UIJeUeOsn/Uq4xDheGItEeSpI5Hcfp/63GclDZk=" crossorigin="anonymous"></script>
+    <script src="static1/js/tabla.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        update();
+    </script>
+</body>
+
+</html>

@@ -1,5 +1,35 @@
-{% extends "web/templates/layout.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page</title>
+    <link rel="stylesheet" href="templates/css/landing1.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-{% block content%}
-<h1>HOME1</h1>
-{%endblock%}
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                Logo Marca
+            </div>
+            <ul>
+                <li><a href="/">Inicio</a></li>
+                <li><a href="/login">Login</a></li>
+                <li><a href="">About</a></li>
+            </ul>
+        </nav>
+        <div class="header-cont">
+            <h2>Todo es posible no te detengas</h2>
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequatur aperiam animi, dolores dicta similique error.</p>
+            <p>
+                <a href="/login">Ingresar Ahora</a>
+            </p>
+        </div>
+
+    </header>
+</body>
+</html>

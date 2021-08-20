@@ -1,4 +1,4 @@
-html,
+
 body {
   height: 100%;
   background: #0f0c29;  /* fallback for old browsers */
@@ -39,4 +39,20 @@ body {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+}
+.boton a{
+  display: inline-block;
+  margin-top: 30px;
+  background: #ffffff;
+  padding: 10px 15px;
+  border-radius: 40px;
+  text-decoration: none;
+  color: #626262;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.boton a:hover{
+  transform: translatey(-5px);
+
 }

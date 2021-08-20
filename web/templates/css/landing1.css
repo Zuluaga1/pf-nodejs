@@ -1,0 +1,90 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: 'Source Sans Pro', sans-serif;
+}
+header{
+    width: 100%;
+    height: 100vh;
+    background-image: linear-gradient(#796aa138,#685e8538), url(Landing-airplanes.jpg);
+    background-size: cover;
+    background-position: center;
+}
+nav{
+    padding: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo{
+    color: white;
+    font: weight 400;
+    font-size: 30px;
+    text-transform: uppercase;
+}
+
+nav ul{
+    display: flex;
+}
+nav ul li{
+    margin-left: 15px;
+    list-style: none;
+    text-decoration: none;
+
+}
+
+nav ul li a{
+    font-size: 30px;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+nav ul li a:hover{
+    text-decoration: underline;
+}
+
+.header-cont{
+    max-width: 600px;
+    height: 50%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.header-cont h2{
+    font-size: 60px;
+    color: white;
+    text-transform: uppercase;
+    font-weight: 300;
+}
+
+.header-cont p{
+    font-size: 25px;
+    color: white;
+    font-weight: 300;
+}
+
+.header-cont a{
+    display: inline-block;
+    margin-top: 30px;
+    background: #ffffff;
+    padding: 10px 15px;
+    border-radius: 40px;
+    text-decoration: none;
+    color: #626262;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.header-cont a:hover{
+    transform: translatey(-5px);
+
+}

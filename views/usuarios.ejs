@@ -75,9 +75,11 @@
                     <thead>
                         <tr class="font-weight-bold">
                             <th scope="col">ID</th>
-                            <th scope="col">Username</th>
-                            <th scope="col">Fullname</th>
+                            <th scope="col">Usuario</th>
+                            <th scope="col">Nombre Completo</th>
                             <th scope="col">Placa</th>
+                            <th scope="col">Rol</th>
+                            <th scope="col">Estado</th>
                             <th scope="col">Acciones</th>
                         </tr>
                     </thead>
@@ -88,8 +90,11 @@
                             <td><%= user.username %></td>
                             <td><%= user.fullname %></td>
                             <td><%= user.placa %></td>
+                            <td><%= user.rol %></td>
+                            <td><%= user.estado %></td>
+
                             <td>
-                                <a href="/edit" class="btn btn-outline-info">Editar</a>
+                                <a href="/edit/<%= user.idlog %>" class="btn btn-outline-info">Editar</a>
                                 <a href="/delete/<%= user.idlog %>" class="btn btn-outline-danger">Eliminar</a>
                             </td>
                         </tr>

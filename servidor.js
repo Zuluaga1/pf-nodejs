@@ -2,13 +2,15 @@ const express = require("express");
 const app = express();
 const mysql = require("mysql");
 const bodyParser = require("body-parser");
-let alert = require("alert");
+const alert = require("alert");
 session = require("express-session");
 const passport = require("passport");
-//app.use(bodyParser());
-
 const net = require("net");
+const path = require("path");
+var _message;
+
 app.use(express.json());
+
 app.use(
   express.urlencoded({
     extended: true,
@@ -23,19 +25,20 @@ app.use(
   })
 );
 
-const path = require("path");
-let _message;
 app.listen(5000, () => {
   console.log("server on port 5000");
 });
+
 app.use(
   bodyParser.urlencoded({
     extended: true,
   })
 );
+
 //MOTOR DE PLANTILLAS--------------------------------------
 app.set("view engine", "ejs");
 
+//Conexión con la base de datos-----------
 const database = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -51,6 +54,7 @@ database.connect((err) => {
 
   console.log("Connected to DB");
 });
+
 //--------UDP----------------------
 /* const dgram = require('dgram');
 const { request } = require('http');
@@ -62,6 +66,7 @@ socket.on('message', (msg, rinfo) => {
     _message = msg.toString();
     console.log(_message)
 }); */
+
 //---------------TCP----------------
 const server = net.createServer((socket) => {
   socket.on("data", (data) => {
@@ -77,14 +82,16 @@ const server = net.createServer((socket) => {
     console.log(err.message);
   });
 });
-/*  server.listen({
-    host: '192.168.1.84',
-    port: 10841,
-    exclusive: true
-});  */
+server.listen({
+  host: "192.168.1.85",
+  port: 10841,
+  exclusive: true,
+});
+
 //--------------------------server----------------
 app.use(express.static("web"));
 
+//creación de rutas----------------------------
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname + "/web/templates/home.html"));
 });
@@ -93,6 +100,7 @@ app.get("/", (req, res) => {
 app.get("/login", function (req, res) {
   res.sendFile(path.join(__dirname + "/web/templates/loginp.html"));
 });
+//Comprobación de contraseñas------
 app.post("/login", (req, res) => {
   var username = req.body.usuario;
   var password = req.body.contraseña;
@@ -110,9 +118,9 @@ app.post("/login", (req, res) => {
         ) {
           req.session.loggedin = true;
           res.redirect("/dashboard");
-        }else {
+        } else {
           alert("Incorrect Username and/or Password!");
-          res.redirect("/login")
+          res.redirect("/login");
         }
       } else {
         res.redirect("/login");
@@ -131,6 +139,7 @@ app.get("/live", (req, res) => {
     res.redirect("/login");
   }
 });
+//Cambiar estado de los sensores-------
 app.get("/live1", (req, res) => {
   _message;
   res.end(JSON.stringify(_message));
@@ -139,10 +148,18 @@ app.get("/live1", (req, res) => {
 //----------dashboard--------------------
 app.get("/da", function (req, res) {
   let sql =
-    "SELECT r.rol, count(e.rol) as num FROM placas.entrada e, placas.rol r  where e.rol=r.idrol  group by e.rol having count(e.rol)>1 ORDER by e.idEntrada;";
+    "SELECT r.rol, count(e.rol) as num FROM placas.entrada e, placas.rol r  where e.rol=r.idrol  group by e.rol having count(e.rol)>0 ORDER by e.idEntrada";
   let query = database.query(sql, (err, result) => {
     if (err) throw err;
-    //console.log(result);
+    res.end(JSON.stringify(result));
+  });
+});
+
+app.get("/da1", function (req, res) {
+  let sql =
+    "SELECT * FROM placas.entrada WHERE FECHA BETWEEN '2020-11-07' AND '2021-11-11';";
+  let query = database.query(sql, (err, result) => {
+    if (err) throw err;
     res.end(JSON.stringify(result));
   });
 });
@@ -155,14 +172,13 @@ app.get("/dashboard", function (req, res) {
     res.redirect("/login");
   }
 });
+
 //------------------tabla con usuarios-----------------------------s
 app.get("/usuarios", function (req, res) {
   if (req.session.loggedin) {
     let sql =
       "SELECT l.idlog, l.username, l.fullname, l.placa, l.estado, r.rol FROM log l, rol r WHERE l.rol = r.idrol;";
     let query = database.query(sql, (err, result) => {
-      //console.log(result[1].rol);
-      //console.log(result.length);
       let roles = [];
       for (let rols in result) {
         if (result[rols].rol == 1) {
@@ -175,7 +191,6 @@ app.get("/usuarios", function (req, res) {
           roles.push("Administrador");
         }
       }
-      //console.log(roles);
       if (err) throw err;
       res.render("usuarios", { results: result });
     });
@@ -185,18 +200,18 @@ app.get("/usuarios", function (req, res) {
   }
 });
 
-//Ruta de edición
+//Ruta de edición-----------------------
 app.get("/edit/:idlog", function (req, res) {
   const idlog = req.params.idlog;
   let sql =
     "SELECT l.idlog, l.username, l.fullname, l.placa, l.estado, r.rol FROM log l, rol r WHERE l.rol = r.idrol AND idlog = ?";
   let query = database.query(sql, [idlog], (err, result) => {
     if (err) throw err;
-    //console.log(result)
     res.render("edit", { user: result[0] });
   });
 });
 
+//Actualizar datos de usuarios-----------------------
 app.post("/update", (req, res) => {
   let id = req.body.id;
   let username = req.body.user;
@@ -225,29 +240,27 @@ app.post("/update", (req, res) => {
 });
 
 app.get("/delete/:idlog", (req, res) => {
-  const idlog = req.params.idlog;
+  let idlog = req.params.idlog;
   let sql = "DELETE FROM log WHERE idlog = ?";
   let query = database.query(sql, [idlog], (err, result) => {
     if (err) throw err;
-    //console.log(result)
     res.redirect("/usuarios");
   });
 });
 
 app.post("/api/crear", (req, res) => {
-  //console.log(req.params)
   console.log(req.body);
-  const data = {
-    pro_nombre: "esteban",
-    pro_placa: "zzz300",
-  };
   let username = req.body.usuario;
   let password = req.body.contraseña;
   if (username && password) {
-    let sql = `SELECT l.username, l.password, r.rol from log l, rol r WHERE l.username LIKE '${username}' AND l.password LIKE '${password}'`;
+    let sql = `SELECT l.username, l.password, l.placa, r.rol from log l, rol r WHERE l.username LIKE '${username}' AND l.password LIKE '${password}'`;
     let query = database.query(sql, (err, results) => {
       if (results.length > 0) {
-        //console.log(results[0].rol)
+        console.log(results[0].placa);
+        let data = {
+          pro_nombre: "esteban",
+          pro_placa: results[0].placa,
+        };
         if (err) {
           console.log("Incorrect Username and/or Password!");
         }
@@ -267,9 +280,7 @@ app.post("/api/n_user", (req, res) => {
   let password = req.body.contraseña;
   let placa = req.body.placa;
   let rol = req.body.rol;
-  let visitante = "visitante";
-  let contratista = "contratista";
-  let trabajador = "trabajador";
+  let estado = "denegado";
   if (rol == "visitante") {
     rol = 1;
   } else if (rol == "trabajador") {
@@ -277,7 +288,7 @@ app.post("/api/n_user", (req, res) => {
   } else {
     rol = 3;
   }
-  let sql = `INSERT INTO log  (username, password, fullname, placa, rol) VALUES ('${username}', '${password}', '${fullname}', '${placa}', '${rol}')`;
+  let sql = `INSERT INTO log  (username, password, fullname, placa, rol, estado) VALUES ('${username}', '${password}', '${fullname}', '${placa}', '${rol}', '${estado}')`;
   let query = database.query(sql, (err, result) => {
     if (err) throw err;
   });

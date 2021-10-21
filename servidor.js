@@ -46,6 +46,13 @@ const database = mysql.createConnection({
   database: "placas",
   port: 8111,
 });
+/* const database = mysql.createConnection({
+  host: "database-2.cc8nxq3lblum.us-east-2.rds.amazonaws.com",
+  user: "admin",
+  password: "proyecto123",
+  database: "placas",s
+  port: 3306,
+}); */
 
 database.connect((err) => {
   if (err) {
@@ -59,9 +66,7 @@ database.connect((err) => {
 /* const dgram = require('dgram');
 const { request } = require('http');
 const socket = dgram.createSocket('udp4');
-socket.bind(10840);
-
-socket.on('message', (msg, rinfo) => {
+socket.bind(10840);   
     _message;
     _message = msg.toString();
     console.log(_message)
@@ -83,7 +88,7 @@ const server = net.createServer((socket) => {
   });
 });
 server.listen({
-  host: "192.168.1.85",
+  host: "192.168.1.84",
   port: 10841,
   exclusive: true,
 });
@@ -147,17 +152,35 @@ app.get("/live1", (req, res) => {
 
 //----------dashboard--------------------
 app.get("/da", function (req, res) {
-  let sql =
+  /* let sql =
     "SELECT r.rol, count(e.rol) as num FROM placas.entrada e, placas.rol r  where e.rol=r.idrol  group by e.rol having count(e.rol)>0 ORDER by e.idEntrada";
+     */
+  let sql =
+    "SELECT r.rol, count(e.rol) as num FROM placas.log e, placas.rol r  where e.rol=r.idrol  group by r.rol having count(e.rol)>0 ORDER by r.idrol";
   let query = database.query(sql, (err, result) => {
     if (err) throw err;
+    //console.log(result)
+    res.end(JSON.stringify(result));
+  });
+});
+
+app.get("/da2", function (req, res) {
+  /* let sql =
+    "SELECT r.rol, count(e.rol) as num FROM placas.entrada e, placas.rol r  where e.rol=r.idrol  group by e.rol having count(e.rol)>0 ORDER by e.idEntrada";
+     */
+  let sql =
+    "SELECT count(*) as total FROM placas.entrada;"
+  let query = database.query(sql, (err, result) => {
+    if (err) throw err;
+    //console.log(result);
+    //console.log(result[0].total);
     res.end(JSON.stringify(result));
   });
 });
 
 app.get("/da1", function (req, res) {
   let sql =
-    "SELECT * FROM placas.entrada WHERE FECHA BETWEEN '2020-11-07' AND '2021-11-11';";
+    "SELECT count(PLACA) as Trimestres, fECHA FROM entrada GROUP BY QUARTER(FECHA);";
   let query = database.query(sql, (err, result) => {
     if (err) throw err;
     res.end(JSON.stringify(result));
@@ -177,7 +200,7 @@ app.get("/dashboard", function (req, res) {
 app.get("/usuarios", function (req, res) {
   if (req.session.loggedin) {
     let sql =
-      "SELECT l.idlog, l.username, l.fullname, l.placa, l.estado, r.rol FROM log l, rol r WHERE l.rol = r.idrol;";
+      "SELECT * FROM log l, rol r WHERE l.rol = r.idrol;";
     let query = database.query(sql, (err, result) => {
       let roles = [];
       for (let rols in result) {
@@ -248,7 +271,7 @@ app.get("/delete/:idlog", (req, res) => {
   });
 });
 
-app.post("/api/crear", (req, res) => {
+app.post("/api/v1/login", (req, res) => {
   console.log(req.body);
   let username = req.body.usuario;
   let password = req.body.contraseña;
@@ -273,7 +296,7 @@ app.post("/api/crear", (req, res) => {
   }
 });
 
-app.post("/api/n_user", (req, res) => {
+app.post("/api/v1/users", (req, res) => {
   console.log(req.body);
   let username = req.body.usuario;
   let fullname = req.body.fullname;

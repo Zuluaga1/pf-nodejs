@@ -18,14 +18,14 @@
     />
     <!--CUSTOM CSS-->
 
-    <link rel="stylesheet" href="templates/css/main.css" />
+    <link rel="stylesheet" href="../static1/css/main.css" />
   </head>
   <body>
     <div class="d-flex">
       <div id="sidebar-container" class="bg-primary">
         <div class="logo">
-          <h4 class="text-light">
-            <div class="b">Dashboard</div>
+          <h4 class="text-light p-3">
+            <div class="b">Live</div>
           </h4>
         </div>
         <div class="menu">
@@ -38,17 +38,12 @@
           <a href="/live" class="d-block text-light p-3"
             ><i class="icon ion-md-apps mr-2 lead"></i> Live</a
           >
-          <a href="#" class="d-block text-light p-3"
-            ><i class="icon ion-md-person mr-2 lead"></i> Perfil</a
-          >
+          
         </div>
       </div>
       <div class="w-100">
-        <nav
-          class="navbar navbar-expand-lg navbar-light bg-light border-bottom"
-        >
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom">
           <div class="container-fluid">
-            <a class="navbar-brand" href="/">Estacionamiento</a>
             <button
               class="navbar-toggler"
               type="button"
@@ -56,26 +51,29 @@
               data-bs-target="#navbarNav"
               aria-controls="navbarNav"
               aria-expanded="false"
-              aria-label="Toggle navigation" 
+              aria-label="Toggle navigation"
             >
               <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                  <a class="nav-link" aria-current="page" href="/">Home</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/entrada">entrada</a>
-                </li>
-
-                <li class="nav-item">
-                  <a class="nav-link" href="/dashboard">Dashboard</a>
+                <li class="nav-item active">
+                  <a class="nav-link active" aria-current="page" href="/"
+                    >Home</a
+                  >
                 </li>
 
                 <li class="nav-item">
-                  <a class="nav-link" href="/about">About</a>
+                  <a class="nav-link active" href="/usuarios">Usuarios</a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link active" href="/dashboard">Dashboard</a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link active" href="/live">Live</a>
                 </li>
               </ul>
             </div>
@@ -95,19 +93,46 @@
           <section>
             <div class="container-fluid">
               <div class="row">
-                <div class="col-lg-6">
-                  <h6 id="sensor1" class="lead">Sensor 1</h6>
+                <div class="col-lg-4 center">
+                  <h6 id="sensor1" class="lead">
+                    <center>Sensor de entrada</center>
+                  </h6>
+                  <script>
+                    document.getElementById("sensor1").style.background = "red";
+                  </script>
+                </div>
+                <div class="col-lg-4">
+                  <h6 id="sensor2" class="lead">
+                    <center>Sensor de salida</center>
+                  </h6>
+                  <script>
+                    document.getElementById("sensor2").style.background = "red";
+                  </script>
+                </div>
+                <div class="col-lg-4">
+                  <h6 id="sensor3" class="lead"><center>Talanquera</center></h6>
+                  <script>
+                    document.getElementById("sensor3").style.background = "red";
+                  </script>
                 </div>
               </div>
             </div>
           </section>
         </div>
+        <script src="../static1/js/live.js"></script>
 
-        <script src="static1/js/live.js"></script>
         <script>
-          asincrono();
+          //asincrono();
         </script>
       </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+      integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>

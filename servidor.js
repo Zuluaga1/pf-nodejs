@@ -46,13 +46,7 @@ const database = mysql.createConnection({
   database: "placas",
   port: 8111,
 }); */
-const database = mysql.createConnection({
-  host: "database-2.cc8nxq3lblum.us-east-2.rds.amazonaws.com",
-  user: "admin",
-  password: "proyecto123",
-  database: "placas",
-  port: 3306,
-});
+
 
 database.connect((err) => {
   if (err) {

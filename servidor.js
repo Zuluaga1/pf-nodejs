@@ -38,15 +38,21 @@ app.use(
 //MOTOR DE PLANTILLAS--------------------------------------
 app.set("view engine", "ejs");
 
-//Conexión con la base de datos-----------
+/* //Conexión con la base de datos-----------
 const database = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
   database: "placas",
   port: 8111,
+}); */
+const database = mysql.createConnection({
+  host: "database-2.cc8nxq3lblum.us-east-2.rds.amazonaws.com",
+  user: "admin",
+  password: "proyecto123",
+  database: "placas",
+  port: 3306,
 });
-
 
 database.connect((err) => {
   if (err) {
@@ -82,7 +88,7 @@ const server = net.createServer((socket) => {
   });
 });
 server.listen({
-  host: "192.168.1.84",
+  host: "ec2-3-144-38-0.us-east-2.compute.amazonaws.com",
   port: 10841,
   exclusive: true,
 });

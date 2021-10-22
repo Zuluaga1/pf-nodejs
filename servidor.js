@@ -8,6 +8,8 @@ const passport = require("passport");
 const net = require("net");
 const path = require("path");
 var _message;
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 app.use(express.json());
 
@@ -38,15 +40,14 @@ app.use(
 //MOTOR DE PLANTILLAS--------------------------------------
 app.set("view engine", "ejs");
 
-/* //Conexión con la base de datos-----------
+//Conexión con la base de datos-----------
 const database = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
   database: "placas",
   port: 8111,
-}); */
-
+});
 
 database.connect((err) => {
   if (err) {
@@ -55,16 +56,6 @@ database.connect((err) => {
 
   console.log("Connected to DB");
 });
-
-//--------UDP----------------------
-/* const dgram = require('dgram');
-const { request } = require('http');
-const socket = dgram.createSocket('udp4');
-socket.bind(10840);   
-    _message;
-    _message = msg.toString();
-    console.log(_message)
-}); */
 
 //---------------TCP----------------
 const server = net.createServer((socket) => {
@@ -82,7 +73,7 @@ const server = net.createServer((socket) => {
   });
 });
 server.listen({
-  host: "ec2-3-144-38-0.us-east-2.compute.amazonaws.com",
+  host: "3.144.38.0",
   port: 10841,
   exclusive: true,
 });
@@ -107,6 +98,7 @@ app.post("/login", (req, res) => {
   if (username && password) {
     let sql = `SELECT l.username, l.password, r.rol from log l, rol r WHERE l.username LIKE '${username}' AND l.password LIKE '${password}' AND r.idrol = l.rol`;
     let query = database.query(sql, (err, results) => {
+      console.log(results);
       if (results.length > 0) {
         if (err) {
           res.send("Incorrect Username and/or Password!");
@@ -159,11 +151,8 @@ app.get("/da", function (req, res) {
 });
 
 app.get("/da2", function (req, res) {
-  /* let sql =
-    "SELECT r.rol, count(e.rol) as num FROM placas.entrada e, placas.rol r  where e.rol=r.idrol  group by e.rol having count(e.rol)>0 ORDER by e.idEntrada";
-     */
   let sql =
-    "SELECT count(*) as total FROM placas.entrada;"
+    "SELECT count(*) as total FROM placas.historicos where MODO = 'entrada';"
   let query = database.query(sql, (err, result) => {
     if (err) throw err;
     //console.log(result);
@@ -174,7 +163,7 @@ app.get("/da2", function (req, res) {
 
 app.get("/da1", function (req, res) {
   let sql =
-    "SELECT count(PLACA) as Trimestres, fECHA FROM entrada GROUP BY QUARTER(FECHA);";
+    "SELECT count(PLACA) as Trimestres, FECHA FROM historicos WHERE MODO ='entrada' GROUP BY QUARTER(FECHA);";
   let query = database.query(sql, (err, result) => {
     if (err) throw err;
     res.end(JSON.stringify(result));
@@ -305,13 +294,19 @@ app.post("/api/v1/users", (req, res) => {
   } else {
     rol = 3;
   }
-  let sql = `INSERT INTO log  (username, password, fullname, placa, rol, estado) VALUES ('${username}', '${password}', '${fullname}', '${placa}', '${rol}', '${estado}')`;
-  let query = database.query(sql, (err, result) => {
-    if (err) throw err;
-  });
-  const data = {
-    pro_nombre: "esteban",
-    pro_placa: "zzz300",
-  };
-  res.json([data]);
+  bcrypt.genSalt(saltRounds, function(err, salt) {
+    bcrypt.hash(password, salt, function(err, hash) {
+        // Store hash in your password DB.
+        let sql = `INSERT INTO log  (username, password, fullname, placa, rol, estado) VALUES ('${username}', '${password}', '${fullname}', '${placa}', '${rol}', '${estado}')`;
+        let query = database.query(sql, (err, result) => {
+          if (err) throw err;
+        });
+        const data = {
+          pro_nombre: "esteban",
+          pro_placa: "zzz300",
+        };
+        res.json([data]);
+    });
+});
+ 
 });

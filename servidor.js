@@ -8,8 +8,9 @@ const passport = require("passport");
 const net = require("net");
 const path = require("path");
 var _message;
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 const saltRounds = 10;
+const salt = bcrypt.genSaltSync(saltRounds);
 
 app.use(express.json());
 
@@ -41,13 +42,15 @@ app.use(
 app.set("view engine", "ejs");
 
 //Conexión con la base de datos-----------
-const database = mysql.createConnection({
+
+
+/* const database = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
   database: "placas",
   port: 8111,
-});
+}); */
 
 database.connect((err) => {
   if (err) {
@@ -73,7 +76,7 @@ const server = net.createServer((socket) => {
   });
 });
 server.listen({
-  host: "3.144.38.0",
+  host: "3.138.106.108",
   port: 10841,
   exclusive: true,
 });
@@ -96,19 +99,21 @@ app.post("/login", (req, res) => {
   var password = req.body.contraseña;
   const admin = "admin";
   if (username && password) {
-    let sql = `SELECT l.username, l.password, r.rol from log l, rol r WHERE l.username LIKE '${username}' AND l.password LIKE '${password}' AND r.idrol = l.rol`;
+    //let sql = `SELECT l.username, l.password, r.rol from log l, rol r WHERE l.username LIKE '${username}' AND l.password LIKE '${password}' AND r.idrol = l.rol`;
+    let sql = `SELECT l.username, l.password, r.rol from log l, rol r WHERE l.username LIKE '${username}' AND r.idrol = l.rol`;
     let query = database.query(sql, (err, results) => {
-      console.log(results);
       if (results.length > 0) {
         if (err) {
           res.send("Incorrect Username and/or Password!");
-        } else if (
-          username == results[0].username &&
-          password == results[0].password &&
-          admin == results[0].rol
-        ) {
-          req.session.loggedin = true;
-          res.redirect("/dashboard");
+        } else if (username == results[0].username && admin == results[0].rol) {
+          bcrypt.compare(password, results[0].password, function (err, result) {
+            if (result == true) {
+              req.session.loggedin = true;
+              res.redirect("/dashboard");
+            } else {
+              console.log("Incorrect Username and/or Password!");
+            }
+          });
         } else {
           alert("Incorrect Username and/or Password!");
           res.redirect("/login");
@@ -152,7 +157,7 @@ app.get("/da", function (req, res) {
 
 app.get("/da2", function (req, res) {
   let sql =
-    "SELECT count(*) as total FROM placas.historicos where MODO = 'entrada';"
+    "SELECT count(*) as total FROM placas.historicos where MODO = 'entrada';";
   let query = database.query(sql, (err, result) => {
     if (err) throw err;
     //console.log(result);
@@ -182,8 +187,7 @@ app.get("/dashboard", function (req, res) {
 //------------------tabla con usuarios-----------------------------s
 app.get("/usuarios", function (req, res) {
   if (req.session.loggedin) {
-    let sql =
-      "SELECT * FROM log l, rol r WHERE l.rol = r.idrol;";
+    let sql = "SELECT * FROM log l, rol r WHERE l.rol = r.idrol;";
     let query = database.query(sql, (err, result) => {
       let roles = [];
       for (let rols in result) {
@@ -255,32 +259,35 @@ app.get("/delete/:idlog", (req, res) => {
 });
 
 app.post("/api/v1/login", (req, res) => {
-  console.log(req.body);
   let username = req.body.usuario;
   let password = req.body.contraseña;
   if (username && password) {
-    let sql = `SELECT l.username, l.password, l.placa, r.rol from log l, rol r WHERE l.username LIKE '${username}' AND l.password LIKE '${password}'`;
+    let sql = `SELECT * from placas.log WHERE username LIKE '${username}'`;
     let query = database.query(sql, (err, results) => {
       if (results.length > 0) {
-        console.log(results[0].placa);
         let data = {
-          pro_nombre: "esteban",
+          pro_nombre: "login",
           pro_placa: results[0].placa,
         };
+
         if (err) {
           console.log("Incorrect Username and/or Password!");
+        } else if (username == results[0].username) {
+          bcrypt.compare(password, results[0].password, function (err, result) {
+            if (result == true) {
+              console.log("Login");
+              res.json([data]);
+            } else {
+              console.log("Incorrect Username and/or Password!");
+            }
+          });
         }
-        console.log("Login");
-        res.json([data]);
-      } else {
-        console.log("Incorrect Username and/or Password!");
       }
     });
   }
 });
 
 app.post("/api/v1/users", (req, res) => {
-  console.log(req.body);
   let username = req.body.usuario;
   let fullname = req.body.fullname;
   let password = req.body.contraseña;
@@ -294,19 +301,15 @@ app.post("/api/v1/users", (req, res) => {
   } else {
     rol = 3;
   }
-  bcrypt.genSalt(saltRounds, function(err, salt) {
-    bcrypt.hash(password, salt, function(err, hash) {
-        // Store hash in your password DB.
-        let sql = `INSERT INTO log  (username, password, fullname, placa, rol, estado) VALUES ('${username}', '${password}', '${fullname}', '${placa}', '${rol}', '${estado}')`;
-        let query = database.query(sql, (err, result) => {
-          if (err) throw err;
-        });
-        const data = {
-          pro_nombre: "esteban",
-          pro_placa: "zzz300",
-        };
-        res.json([data]);
-    });
-});
- 
+  // Store hash in your password DB.
+  hash = bcrypt.hashSync(password, salt);
+  let sql = `INSERT INTO log  (username, password, fullname, placa, rol, estado) VALUES ('${username}', '${hash}', '${fullname}', '${placa}', '${rol}', '${estado}')`;
+  let query = database.query(sql, (err, result) => {
+    if (err) throw err;
+  });
+  const data = {
+    pro_nombre: "esteban",
+    pro_placa: "zzz300",
+  };
+  res.json([data]);
 });

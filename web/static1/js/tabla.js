@@ -13,10 +13,10 @@ async function ocupaciónMensual() {
   try {
     let caso = await trimestre();
     let caso1 = {
-      primerTrimestre: caso[0].Trimestres,
-      segundoTrimestre: caso[1].Trimestres,
-      tercerTrimestre: caso[2].Trimestres,
-      cuartoTrimestre: caso[3].Trimestres,
+      primerTrimestre: caso[1].Trimestres,
+      segundoTrimestre: caso[2].Trimestres,
+      tercerTrimestre: caso[3].Trimestres,
+      cuartoTrimestre: caso[0].Trimestres,
     };
     const labels = [
       "Primer trimestre",

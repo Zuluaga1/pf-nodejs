@@ -44,13 +44,14 @@ app.set("view engine", "ejs");
 //Conexión con la base de datos-----------
 
 
-/* const database = mysql.createConnection({
+
+const database = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
   database: "placas",
   port: 8111,
-}); */
+});
 
 database.connect((err) => {
   if (err) {
@@ -76,7 +77,7 @@ const server = net.createServer((socket) => {
   });
 });
 server.listen({
-  host: "3.138.106.108",
+  host: "172.31.7.8",
   port: 10841,
   exclusive: true,
 });
@@ -157,7 +158,7 @@ app.get("/da", function (req, res) {
 
 app.get("/da2", function (req, res) {
   let sql =
-    "SELECT count(*) as total FROM placas.historicos where MODO = 'entrada';";
+    "SELECT count(*) as total FROM placas.entrada ;";
   let query = database.query(sql, (err, result) => {
     if (err) throw err;
     //console.log(result);
@@ -288,9 +289,9 @@ app.post("/api/v1/login", (req, res) => {
 });
 
 app.post("/api/v1/users", (req, res) => {
-  let username = req.body.usuario;
-  let fullname = req.body.fullname;
-  let password = req.body.contraseña;
+  let username = req.body.contraseña;
+  let fullname = req.body.usuario;
+  let password = req.body.fullname;
   let placa = req.body.placa;
   let rol = req.body.rol;
   let estado = "denegado";
